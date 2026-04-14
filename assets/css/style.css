@@ -1,0 +1,52 @@
+/* FindIt Custom Styles */
+:root {
+    --navy: #0D2B55;
+    --teal: #0A7E8C;
+    --accent: #F4A827;
+    --light: #EAF4F6;
+    --dark: #1A1A1A;
+}
+
+body {
+    font-family: 'Calibri', sans-serif;
+    background-color: #f8f9fa;
+    color: var(--dark);
+}
+
+.btn-primary {
+    background-color: var(--teal);
+    border-color: var(--teal);
+}
+
+.btn-primary:hover {
+    background-color: var(--navy);
+    border-color: var(--navy);
+}
+
+.btn-warning {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.section-title {
+    color: var(--navy);
+    font-weight: bold;
+    border-bottom: 3px solid var(--teal);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+}
+
+.category-card {
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.category-card:hover {
+    transform: translateY(-4px);
+}
