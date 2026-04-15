@@ -22,7 +22,7 @@ define('SMTP_HOST',     'mail.smtp2go.com');
 define('SMTP_PORT',     2525);
 define('SMTP_USERNAME', 'capstone2026');
 define('SMTP_PASSWORD', 'capstonescu2026');
-define('MAIL_FROM',     'noreply@findit.com.au');
+define('MAIL_FROM',     'p.das.11@student.scu.edu.au');
 define('MAIL_NAME',     'FindIt Community Platform');
 // ─────────────────────────────────────────────────────────────
 
