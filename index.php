@@ -28,7 +28,7 @@
       <div class="row g-4 text-center">
         <?php
         $categories = [
-          ['icon' => '🐾', 'name' => 'Pets', 'desc' => 'Dogs, cats, birds and more'],
+          ['icon' => '🐾', 'name' => 'Pets', 'desc' => 'Dogs, cats, birds, reptiles and more'],
           ['icon' => '📱', 'name' => 'Electronics', 'desc' => 'Phones, laptops, wallets, keys'],
           ['icon' => '📄', 'name' => 'Documents', 'desc' => 'IDs, passports, bank cards'],
           ['icon' => '👤', 'name' => 'Missing Persons', 'desc' => 'Urgent community reports'],
