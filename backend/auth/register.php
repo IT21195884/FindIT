@@ -1,55 +1,53 @@
 <?php
+session_start();
 require_once '../../includes/db.php';
+require_once '../../includes/functions.php';
 
-// Sanitise inputs
-$name = trim(htmlspecialchars($_POST['name']));
-$email = trim(htmlspecialchars($_POST['email']));
-$suburb = trim(htmlspecialchars($_POST['suburb']));
-$password = $_POST['password'];
-$confirm = $_POST['confirm_password'];
+$name = sanitize($_POST['name'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$suburb = sanitize($_POST['suburb'] ?? '');
+$password = $_POST['password'] ?? '';
+$confirmPassword = $_POST['confirm_password'] ?? '';
 
-// Validate
-if (empty($name) || empty($email) || empty($suburb) || empty($password)) {
-    header("Location: ../../register.php?error=All fields are required.");
+if (empty($name) || empty($email) || empty($suburb) || empty($password) || empty($confirmPassword)) {
+    header("Location: ../../register.php?error=Please fill in all fields.");
     exit();
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    header("Location: ../../register.php?error=Invalid email address.");
+    header("Location: ../../register.php?error=Please enter a valid email address.");
     exit();
 }
 
-if (strlen($password) < 8) {
-    header("Location: ../../register.php?error=Password must be at least 8 characters.");
-    exit();
-}
-
-if ($password !== $confirm) {
+if ($password !== $confirmPassword) {
     header("Location: ../../register.php?error=Passwords do not match.");
     exit();
 }
 
-// Check duplicate email
-$stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
-$stmt->execute([$email]);
-if ($stmt->fetch()) {
-    header("Location: ../../register.php?error=This email is already registered. Please login.");
+if (strlen($password) < 8) {
+    header("Location: ../../register.php?error=Password must be at least 8 characters long.");
     exit();
 }
 
-// Hash password and insert user
-$hashed = password_hash($password, PASSWORD_BCRYPT);
-$stmt = $pdo->prepare("INSERT INTO users (name, email, password, suburb, role, status, created_at) VALUES (?, ?, ?, ?, 'user', 'active', NOW())");
-$stmt->execute([$name, $email, $hashed, $suburb]);
+// Check if email already exists
+$stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+$stmt->execute([$email]);
 
-// Send confirmation email
-require_once '../../backend/email/sendEmail.php';
-$subject = "Welcome to FindIt!";
-$body = file_get_contents('../../templates/email/confirmation.html');
-$body = str_replace('{{name}}', $name, $body);
-$body = str_replace('{{email}}', $email, $body);
-sendEmail($email, $subject, $body);
+if ($stmt->fetch()) {
+    header("Location: ../../register.php?error=Email is already registered.");
+    exit();
+}
 
-header("Location: ../../login.php?success=Account created successfully! Please login.");
+// Hash password
+$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+// Insert new user
+$stmt = $pdo->prepare("
+    INSERT INTO users (name, email, suburb, password, role, status)
+    VALUES (?, ?, ?, ?, 'user', 'active')
+");
+$stmt->execute([$name, $email, $suburb, $hashedPassword]);
+
+header("Location: ../../login.php?success=Registration successful. Please log in.");
 exit();
 ?>
