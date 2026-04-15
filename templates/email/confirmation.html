@@ -1,33 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
-    .container { max-width: 600px; margin: 40px auto; background: white; border-radius: 12px; overflow: hidden; }
-    .header { background-color: #0D2B55; color: white; padding: 30px; text-align: center; }
-    .header h1 { margin: 0; font-size: 1.8rem; }
-    .body { padding: 30px; color: #1A1A1A; }
-    .btn { display: inline-block; background-color: #0A7E8C; color: white; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 16px; }
-    .footer { background-color: #EAF4F6; text-align: center; padding: 16px; font-size: 0.85rem; color: #6B7280; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to FindIt!</title>
+    <style>
+        body { margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif; }
+        .wrapper { max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; }
+        .header { background-color: #0D2B55; padding: 32px 24px; text-align: center; }
+        .header h1 { color: #ffffff; margin: 0; font-size: 26px; }
+        .header p { color: #BDD7EE; margin: 6px 0 0; font-size: 14px; }
+        .accent-bar { height: 6px; background: linear-gradient(to right, #F4A827, #0A7E8C); }
+        .body { padding: 32px 24px; }
+        .body h2 { color: #0D2B55; font-size: 20px; margin-bottom: 12px; }
+        .body p { color: #444; font-size: 14px; line-height: 1.7; margin-bottom: 16px; }
+        .info-box { background-color: #EAF4F6; border-left: 4px solid #0A7E8C; border-radius: 0 8px 8px 0; padding: 14px 16px; margin-bottom: 24px; }
+        .info-box p { margin: 0; font-size: 14px; color: #444; }
+        .info-box strong { color: #0D2B55; }
+        .btn { display: inline-block; background-color: #0A7E8C; color: #ffffff; text-decoration: none; padding: 13px 28px; border-radius: 8px; font-size: 15px; font-weight: bold; margin-bottom: 24px; }
+        .divider { border: none; border-top: 1px solid #e8e8e8; margin: 24px 0; }
+        .categories { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+        .cat-badge { background-color: #f0f0f0; border-radius: 20px; padding: 6px 14px; font-size: 13px; color: #555; }
+        .footer { background-color: #0D2B55; padding: 20px 24px; text-align: center; }
+        .footer p { color: #BDD7EE; font-size: 12px; margin: 4px 0; }
+        .footer a { color: #F4A827; text-decoration: none; }
+        .disclaimer { padding: 16px 24px; background-color: #f9f9f9; }
+        .disclaimer p { color: #999; font-size: 11px; margin: 0; text-align: center; }
+    </style>
 </head>
 <body>
-  <div class="container">
+<div class="wrapper">
+
+    <!-- Header -->
     <div class="header">
-      <h1>🔍 FindIt</h1>
-      <p style="margin:8px 0 0;">Community Lost & Found Platform</p>
+        <h1>🔍 FindIt</h1>
+        <p>Community Lost & Found Platform</p>
     </div>
+    <div class="accent-bar"></div>
+
+    <!-- Body -->
     <div class="body">
-      <h2>Welcome to FindIt, {{name}}!</h2>
-      <p>Your account has been successfully created. You can now log in and start posting lost and found reports in your community.</p>
-      <p><strong>Your registered email:</strong> {{email}}</p>
-      <a href="http://localhost/findit/login.php" class="btn">Login to FindIt</a>
-      <p style="margin-top:24px; color:#6B7280; font-size:0.9rem;">If you did not create this account, please ignore this email.</p>
+        <h2>Welcome to FindIt, {{name}}!</h2>
+        <p>Your account has been successfully created. You are now part of Western Australia's community lost and found network — helping reunite people with their lost pets, belongings, documents, and loved ones.</p>
+
+        <!-- Account Info Box -->
+        <div class="info-box">
+            <p><strong>Registered email:</strong> {{email}}</p>
+            <p style="margin-top:6px"><strong>Account status:</strong> Active ✅</p>
+        </div>
+
+        <!-- CTA Button -->
+        <a href="http://localhost/findit/login.php" class="btn">Login to FindIt</a>
+
+        <hr class="divider">
+
+        <!-- What you can do -->
+        <p><strong>What you can do now:</strong></p>
+        <p>🐾 &nbsp;Post a lost or found <strong>pet</strong> report<br>
+           📱 &nbsp;Report a lost <strong>electronic device</strong> or valuable<br>
+           📄 &nbsp;Report lost <strong>important documents</strong><br>
+           👤 &nbsp;Submit a <strong>missing persons</strong> report</p>
+
+        <hr class="divider">
+
+        <p style="color:#999;font-size:13px;">If you did not create this account, please ignore this email. No action is required.</p>
     </div>
+
+    <!-- Footer -->
     <div class="footer">
-      FindIt is supported by WA Police &nbsp;|&nbsp; &copy; 2026 FindIt. All rights reserved.
+        <p><strong style="color:#fff">FindIt</strong> — Community Lost & Found Platform</p>
+        <p>Supported by <strong style="color:#fff">WA Police</strong></p>
+        <p style="margin-top:8px">&copy; 2026 FindIt. All rights reserved.</p>
     </div>
-  </div>
+
+    <!-- Disclaimer -->
+    <div class="disclaimer">
+        <p>This email was sent to {{email}} because you registered at FindIt.<br>
+        This is an automated message — please do not reply to this email.</p>
+    </div>
+
+</div>
 </body>
 </html>
