@@ -21,16 +21,19 @@ if ($id <= 0 || empty($type) || empty($category) || empty($title) || empty($desc
     exit();
 }
 
+//Validate report type
 if (!in_array($type, ['lost', 'found'], true)) {
     header("Location: ../../report-edit.php?id=$id&error=Invalid report type.");
     exit();
 }
 
-// Make sure the report belongs to the logged-in user
+// VALIdating the report owner(Logged in user)
 $checkStmt = $pdo->prepare("SELECT id FROM reports WHERE id = ? AND user_id = ?");
 $checkStmt->execute([$id, $_SESSION['user_id']]);
 $report = $checkStmt->fetch();
 
+
+//If report not found or user does not own it
 if (!$report) {
     header("Location: ../../dashboard.php?error=Report not found or access denied.");
     exit();
@@ -42,6 +45,8 @@ $stmt = $pdo->prepare("
     WHERE id = ? AND user_id = ?
 ");
 
+
+//Running the query
 $stmt->execute([
     $type,
     $category,
