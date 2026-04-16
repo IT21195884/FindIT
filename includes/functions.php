@@ -1,3 +1,8 @@
+
+<!-- cleaning and securing user input -->
+
+<!-- Debugged using GenAI  -->
+
 <?php
 function sanitize(string $value): string
 {

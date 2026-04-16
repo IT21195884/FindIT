@@ -1,6 +1,8 @@
+<!-- reusable authentication helper file. -->
+
 <?php
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+    session_start();                               
 }
 
 function require_login(): void
@@ -10,3 +12,7 @@ function require_login(): void
         exit();
     }
 }
+
+
+
+// check weather user logged in if not login safely
