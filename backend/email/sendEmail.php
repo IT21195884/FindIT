@@ -55,8 +55,10 @@ function sendEmail(string $to, string $subject, string $htmlBody): bool {
 
         // ── Email Content ────────────────────────────────
         $mail->isHTML(true);
-        $mail->Subject = $subject;
-        $mail->Body    = $htmlBody;
+        $mail->CharSet  = 'UTF-8';
+        $mail->Encoding = 'base64';
+        $mail->Subject  = $subject;
+        $mail->Body     = $htmlBody;
 
         // Plain text fallback for email clients that don't support HTML
         $mail->AltBody = strip_tags(
