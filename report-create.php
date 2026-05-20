@@ -1,5 +1,6 @@
 <?php
 require_once 'includes/header.php';
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -12,10 +13,16 @@ if (!isset($_SESSION['user_id'])) {
       <div class="col-md-7">
         <div class="card p-4">
           <h2 class="section-title">Post a Lost or Found Report</h2>
+
           <?php if (isset($_GET['error'])): ?>
             <div class="alert alert-danger"><?= htmlspecialchars($_GET['error']) ?></div>
           <?php endif; ?>
-          <form action="backend/report/create.php" method="POST">
+
+          <?php if (isset($_GET['success'])): ?>
+            <div class="alert alert-success"><?= htmlspecialchars($_GET['success']) ?></div>
+          <?php endif; ?>
+
+          <form action="backend/report/create.php" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
               <label class="form-label fw-bold">Report Type</label>
               <select name="type" class="form-select" required>
@@ -24,6 +31,7 @@ if (!isset($_SESSION['user_id'])) {
                 <option value="found">Found</option>
               </select>
             </div>
+
             <div class="mb-3">
               <label class="form-label fw-bold">Category</label>
               <select name="category" class="form-select" required>
@@ -34,22 +42,33 @@ if (!isset($_SESSION['user_id'])) {
                 <option value="Missing Persons">👤 Missing Persons</option>
               </select>
             </div>
+
             <div class="mb-3">
               <label class="form-label fw-bold">Title</label>
               <input type="text" name="title" class="form-control" placeholder="e.g. Lost black Labrador — Fremantle" required>
             </div>
+
             <div class="mb-3">
               <label class="form-label fw-bold">Description</label>
               <textarea name="description" class="form-control" rows="4" placeholder="Describe the item or person in detail including distinguishing features..." required></textarea>
             </div>
+
             <div class="mb-3">
               <label class="form-label fw-bold">Suburb</label>
               <input type="text" name="suburb" class="form-control" placeholder="e.g. Fremantle" required>
             </div>
-            <div class="mb-4">
+
+            <div class="mb-3">
               <label class="form-label fw-bold">Date Lost/Found</label>
               <input type="date" name="date_occurred" class="form-control" required>
             </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold">Upload Images</label>
+              <input type="file" name="images[]" class="form-control" accept=".jpg,.jpeg,.png,.gif,.webp" multiple>
+              <small class="text-muted">You can upload up to 3 images only. Allowed types: JPG, JPEG, PNG, GIF, WEBP.</small>
+            </div>
+
             <button type="submit" class="btn btn-primary w-100 fw-bold">Submit Report</button>
           </form>
         </div>
