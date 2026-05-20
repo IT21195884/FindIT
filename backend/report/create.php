@@ -117,7 +117,7 @@ $stmt = $pdo->prepare("
         image_3,
         status
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')
 ");
 
 $stmt->execute([

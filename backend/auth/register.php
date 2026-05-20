@@ -1,19 +1,24 @@
 <?php
+
+// starting the session
+
 session_start();
-require_once '../../includes/db.php';
+require_once '../../includes/db.php';      //includes databse and function file
 require_once '../../includes/functions.php';
 
-$name           = sanitize($_POST['name']             ?? '');
-$email          = trim($_POST['email']                ?? '');
-$suburb         = sanitize($_POST['suburb']           ?? '');
-$password       = $_POST['password']                  ?? '';
-$confirmPassword= $_POST['confirm_password']          ?? '';
+$name = sanitize($_POST['name'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$suburb = sanitize($_POST['suburb'] ?? '');
+$password = $_POST['password'] ?? '';
+$confirmPassword = $_POST['confirm_password'] ?? '';
 
+// Check if any required field is empty
 if (empty($name) || empty($email) || empty($suburb) || empty($password) || empty($confirmPassword)) {
     header("Location: ../../register.php?error=Please fill in all fields.");
     exit();
 }
 
+//Validating the email
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     header("Location: ../../register.php?error=Please enter a valid email address.");
     exit();
@@ -39,6 +44,8 @@ if ($stmt->fetch()) {
 
 // Hash password and insert new user
 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+// Insert new user
 $stmt = $pdo->prepare("
     INSERT INTO users (name, email, suburb, password, role, status)
     VALUES (?, ?, ?, ?, 'user', 'active')
