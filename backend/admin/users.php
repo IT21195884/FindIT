@@ -3,6 +3,7 @@ session_start();
 require_once '../../includes/db.php';
 require_once '../../includes/functions.php';
 require_once '../../backend/email/sendEmail.php';
+require_once '../../includes/admin_helpers.php';
 
 // Admin only
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
@@ -47,7 +48,7 @@ if ($targetUser['role'] === 'admin') {
     exit();
 }
 
-require_once __DIR__ . '/moderate.php'; // logAdminAction() is defined here
+require_once __DIR__ . '/../../includes/admin_helpers.php';
 
 $templatePath = __DIR__ . '/../../templates/email/';
 

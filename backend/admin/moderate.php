@@ -2,6 +2,7 @@
 session_start();
 require_once '../../includes/db.php';
 require_once '../../includes/functions.php';
+require_once '../../includes/admin_helpers.php';
  
 // Admin only
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
@@ -59,13 +60,5 @@ switch ($action) {
 header("Location: ../../admin/moderation.php?success=" . urlencode($message));
 exit();
  
-// ─── Helper: Log admin action ────────────────────────────────
-function logAdminAction(PDO $pdo, int $adminId, string $action, int $recordId, string $type = 'report'): void
-{
-    $stmt = $pdo->prepare("
-        INSERT INTO admin_log (admin_id, action, affected_record_id, affected_type, timestamp)
-        VALUES (?, ?, ?, ?, NOW())
-    ");
-    $stmt->execute([$adminId, $action, $recordId, $type]);
-}
+require_once __DIR__ . '/../../includes/admin_helpers.php';
 ?>

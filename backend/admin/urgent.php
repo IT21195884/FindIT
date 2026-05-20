@@ -3,6 +3,7 @@ session_start();
 require_once '../../includes/db.php';
 require_once '../../includes/functions.php';
 require_once '../../backend/email/sendEmail.php';
+require_once '../../includes/admin_helpers.php';
 
 // Admin only
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
@@ -45,7 +46,7 @@ $pdo->prepare("UPDATE reports SET is_urgent = ? WHERE id = ?")
     ->execute([$newValue, $reportId]);
 
 // Log the action
-require_once __DIR__ . '/moderate.php';
+require_once __DIR__ . '/../../includes/admin_helpers.php';
 $actionLabel = $newValue ? 'flag_urgent' : 'unflag_urgent';
 logAdminAction($pdo, $adminId, $actionLabel, $reportId, 'report');
 
