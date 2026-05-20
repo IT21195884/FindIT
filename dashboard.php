@@ -27,22 +27,20 @@ $stmt = $pdo->prepare("
         m.match_score,
         m.status AS match_status,
         m.created_at AS matched_at,
-        -- The matched report (the one NOT belonging to this user)
-        CASE WHEN r1.user_id = :uid THEN r2.id   ELSE r1.id   END AS matched_report_id,
-        CASE WHEN r1.user_id = :uid THEN r2.title ELSE r1.title END AS matched_title,
-        CASE WHEN r1.user_id = :uid THEN r2.suburb ELSE r1.suburb END AS matched_suburb,
-        CASE WHEN r1.user_id = :uid THEN r2.category ELSE r1.category END AS matched_category,
-        CASE WHEN r1.user_id = :uid THEN r2.report_type ELSE r1.report_type END AS matched_type,
-        -- The user's own report involved in this match
-        CASE WHEN r1.user_id = :uid THEN r1.title ELSE r2.title END AS own_report_title
+        CASE WHEN r1.user_id = ? THEN r2.id   ELSE r1.id   END AS matched_report_id,
+        CASE WHEN r1.user_id = ? THEN r2.title ELSE r1.title END AS matched_title,
+        CASE WHEN r1.user_id = ? THEN r2.suburb ELSE r1.suburb END AS matched_suburb,
+        CASE WHEN r1.user_id = ? THEN r2.category ELSE r1.category END AS matched_category,
+        CASE WHEN r1.user_id = ? THEN r2.report_type ELSE r1.report_type END AS matched_type,
+        CASE WHEN r1.user_id = ? THEN r1.title ELSE r2.title END AS own_report_title
     FROM matches m
     JOIN reports r1 ON m.report_id_1 = r1.id
     JOIN reports r2 ON m.report_id_2 = r2.id
-    WHERE (r1.user_id = :uid OR r2.user_id = :uid)
+    WHERE (r1.user_id = ? OR r2.user_id = ?)
     AND m.status != 'dismissed'
     ORDER BY m.created_at DESC
 ");
-$stmt->execute([':uid' => $user_id]);
+$stmt->execute([$user_id, $user_id, $user_id, $user_id, $user_id, $user_id, $user_id, $user_id]);
 $matches = $stmt->fetchAll();
 
 // Generate CSRF token for dismiss actions

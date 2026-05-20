@@ -1,4 +1,6 @@
 <?php
+require_once '../includes/header.php';
+
 require_once '../includes/db.php';
 require_once '../includes/admin-auth.php';
 
@@ -164,3 +166,4 @@ $reports = $stmt->fetchAll();
 
 </body>
 </html>
+<?php require_once '../includes/footer.php'; ?>

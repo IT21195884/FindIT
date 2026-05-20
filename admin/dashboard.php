@@ -46,7 +46,7 @@ $recent = $pdo->query("
         </p>
       </div>
 
-      <a href="reports.php" class="btn btn-primary fw-bold">
+      <a href="moderation.php" class="btn btn-primary fw-bold">
         Manage Reports
       </a>
     </div>
@@ -168,7 +168,7 @@ $recent = $pdo->query("
       </h5>
 
       <div class="d-flex gap-2 flex-wrap">
-        <a href="reports.php" class="btn btn-primary">
+        <a href="moderation.php" class="btn btn-primary">
           View / Approve / Delete Reports
         </a>
 

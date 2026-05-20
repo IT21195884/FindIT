@@ -1,6 +1,7 @@
 <?php
 require_once '../includes/header.php';
 require_once '../includes/db.php';
+require_once '../includes/functions.php';
 
 // Admin only
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
