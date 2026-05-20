@@ -3,123 +3,84 @@ session_start();
 require_once '../../includes/db.php';
 require_once '../../includes/functions.php';
 
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../../login.php?error=Please login first.");
     exit();
 }
 
-$type = sanitize($_POST['type'] ?? '');
-$category = sanitize($_POST['category'] ?? '');
-$title = sanitize($_POST['title'] ?? '');
+// Generate and validate CSRF token
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        header("Location: ../../report-create.php?error=Invalid request. Please try again.");
+        exit();
+    }
+}
+
+// Sanitize POST inputs
+$type        = sanitize($_POST['type'] ?? '');
+$category    = sanitize($_POST['category'] ?? '');
+$title       = sanitize($_POST['title'] ?? '');
 $description = sanitize($_POST['description'] ?? '');
-$suburb = sanitize($_POST['suburb'] ?? '');
+$suburb      = sanitize($_POST['suburb'] ?? '');
 $dateOccurred = $_POST['date_occurred'] ?? '';
 
-if (
-    empty($type) ||
-    empty($category) ||
-    empty($title) ||
-    empty($description) ||
-    empty($suburb) ||
-    empty($dateOccurred)
-) {
-    header("Location: ../../report-create.php?error=Please fill in all fields.");
+// Validate required fields
+if (empty($type) || empty($category) || empty($title) || empty($description) || empty($suburb) || empty($dateOccurred)) {
+    header("Location: ../../report-create.php?error=Please fill in all required fields.");
     exit();
 }
 
+// Validate report type
 if (!in_array($type, ['lost', 'found'], true)) {
     header("Location: ../../report-create.php?error=Invalid report type.");
     exit();
 }
 
-$imagePaths = [null, null, null];
+// Validate category
+$allowedCategories = ['Pets', 'Electronics', 'Documents', 'Missing Persons'];
+if (!in_array($category, $allowedCategories, true)) {
+    header("Location: ../../report-create.php?error=Invalid category.");
+    exit();
+}
 
-if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
-    $totalImages = count(array_filter($_FILES['images']['name']));
+// Handle optional image upload
+$imagePath = null;
+if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+    $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+    $maxSize = 2 * 1024 * 1024; // 2MB
 
-    if ($totalImages > 3) {
-        header("Location: ../../report-create.php?error=You can upload a maximum of 3 images.");
+    $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+
+    if (!in_array($ext, $allowedExtensions, true)) {
+        header("Location: ../../report-create.php?error=Invalid image type. Only JPG, PNG, and GIF are allowed.");
+        exit();
+    }
+    if ($_FILES['image']['size'] > $maxSize) {
+        header("Location: ../../report-create.php?error=Image too large. Maximum size is 2MB.");
         exit();
     }
 
+    // Create uploads directory if it doesn't exist
     $uploadDir = __DIR__ . '/../../uploads/';
-
     if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
+        mkdir($uploadDir, 0755, true);
     }
 
-    if (!is_writable($uploadDir)) {
-        header("Location: ../../report-create.php?error=Upload folder is not writable.");
+    $filename = uniqid('report_', true) . '.' . $ext;
+    if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $filename)) {
+        $imagePath = 'uploads/' . $filename;
+    } else {
+        header("Location: ../../report-create.php?error=Image upload failed. Please try again.");
         exit();
-    }
-
-    $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-    $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    $maxFileSize = 5 * 1024 * 1024;
-
-    $savedIndex = 0;
-
-    for ($i = 0; $i < count($_FILES['images']['name']); $i++) {
-        if (empty($_FILES['images']['name'][$i])) {
-            continue;
-        }
-
-        if ($_FILES['images']['error'][$i] !== UPLOAD_ERR_OK) {
-            header("Location: ../../report-create.php?error=Image upload failed. Error code: " . $_FILES['images']['error'][$i]);
-            exit();
-        }
-
-        if ($_FILES['images']['size'][$i] > $maxFileSize) {
-            header("Location: ../../report-create.php?error=Each image must be less than 5MB.");
-            exit();
-        }
-
-        $originalName = $_FILES['images']['name'][$i];
-        $fileExtension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
-
-        if (!in_array($fileExtension, $allowedExtensions, true)) {
-            header("Location: ../../report-create.php?error=Only JPG, JPEG, PNG, GIF, and WEBP images are allowed.");
-            exit();
-        }
-
-        $mimeType = mime_content_type($_FILES['images']['tmp_name'][$i]);
-
-        if (!in_array($mimeType, $allowedMimeTypes, true)) {
-            header("Location: ../../report-create.php?error=Invalid image file type.");
-            exit();
-        }
-
-        $newFileName = time() . '_' . uniqid('report_', true) . '.' . $fileExtension;
-        $targetFile = $uploadDir . $newFileName;
-
-        if (!move_uploaded_file($_FILES['images']['tmp_name'][$i], $targetFile)) {
-            header("Location: ../../report-create.php?error=Failed to save uploaded image.");
-            exit();
-        }
-
-        $imagePaths[$savedIndex] = 'uploads/' . $newFileName;
-        $savedIndex++;
     }
 }
 
+// Insert report — status defaults to 'pending' (awaiting admin approval)
 $stmt = $pdo->prepare("
-    INSERT INTO reports (
-        user_id,
-        report_type,
-        category,
-        title,
-        description,
-        suburb,
-        report_date,
-        image_path,
-        image_1,
-        image_2,
-        image_3,
-        status
-    )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+    INSERT INTO reports (user_id, report_type, category, title, description, suburb, report_date, image_path, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
 ");
-
 $stmt->execute([
     $_SESSION['user_id'],
     $type,
@@ -128,12 +89,16 @@ $stmt->execute([
     $description,
     $suburb,
     $dateOccurred,
-    $imagePaths[0],
-    $imagePaths[0],
-    $imagePaths[1],
-    $imagePaths[2]
+    $imagePath
 ]);
 
-header("Location: ../../dashboard.php?success=Report submitted successfully.");
+$newReportId = $pdo->lastInsertId();
+
+// Trigger match detection for the new report
+require_once __DIR__ . '/../match/detect.php';
+runMatchDetection($pdo, (int)$newReportId);
+
+// Redirect back to dashboard
+header("Location: ../../dashboard.php?success=Report submitted successfully. It will appear publicly once reviewed by an administrator.");
 exit();
 ?>
