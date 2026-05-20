@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Report Has Been Flagged as Urgent — FindIt</title>
+  <style>
+    body { margin: 0; padding: 0; background-color: #f4f4f4; font-family: Calibri, Arial, sans-serif; }
+    .wrapper { max-width: 600px; margin: 30px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .header { background-color: #0D2B55; padding: 30px; text-align: center; }
+    .header h1 { color: #ffffff; margin: 0; font-size: 24px; }
+    .header p { color: #a8c8e8; margin: 6px 0 0; font-size: 14px; }
+    .body { padding: 32px; color: #333333; }
+    .body h2 { color: #c0392b; font-size: 20px; margin-top: 0; }
+    .urgent-card { background-color: #fff3f3; border-left: 4px solid #c0392b; border-radius: 6px; padding: 16px 20px; margin: 20px 0; }
+    .urgent-card p { margin: 4px 0; font-size: 15px; }
+    .urgent-badge { display: inline-block; background-color: #c0392b; color: #fff; font-size: 12px; font-weight: bold; padding: 3px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .btn { display: inline-block; background-color: #0A7E8C; color: #ffffff !important; text-decoration: none; padding: 12px 28px; border-radius: 6px; font-weight: bold; font-size: 15px; margin-top: 16px; }
+    .footer { background-color: #f4f4f4; padding: 20px; text-align: center; font-size: 12px; color: #999999; }
+    .divider { border: none; border-top: 1px solid #eeeeee; margin: 24px 0; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <h1>🔍 FindIt</h1>
+      <p>Community Lost &amp; Found Platform — WA Police</p>
+    </div>
+    <div class="body">
+      <h2>🚨 Your report has been flagged as urgent</h2>
+      <p>Hi <strong>{{owner_name}}</strong>,</p>
+      <p>A WA Police administrator has reviewed your report and flagged it as <strong>urgent</strong>. This means your report is now pinned to the top of the FindIt public listings page so it receives maximum visibility from the community.</p>
+
+      <div class="urgent-card">
+        <div class="urgent-badge">Urgent</div>
+        <p><strong>Report:</strong> {{report_title}}</p>
+      </div>
+
+      <a href="{{report_link}}" class="btn">View Your Report →</a>
+
+      <hr class="divider">
+      <p style="font-size:13px; color:#666666;">
+        If you have any questions or updates regarding this report, please contact your local WA Police station directly.
+      </p>
+    </div>
+    <div class="footer">
+      <p>© 2026 FindIt — Community Lost &amp; Found Platform</p>
+      <p>Managed by WA Police Force Community Engagement | 2 Adelaide Terrace, East Perth WA 6004</p>
+      <p>This is an automated notification. Please do not reply to this email.</p>
+    </div>
+  </div>
+</body>
+</html>
