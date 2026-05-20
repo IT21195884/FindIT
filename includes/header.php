@@ -21,6 +21,8 @@
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <li class="nav-item"><a class="nav-link" href="/findit/dashboard.php">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="/findit/report-create.php">Report Lost/Found</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/findit/admin/moderation.php">Moderation</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/findit/admin/users.php">Users</a></li>
                     <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
                         <li class="nav-item"><a class="nav-link" href="/findit/admin/dashboard.php">Admin</a></li>
                     <?php endif; ?>
