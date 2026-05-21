@@ -1,8 +1,11 @@
-<!-- reusable authentication helper file. -->
-
 <?php
+// ============================================================
+// FindIt — auth.php
+// Reusable authentication helper functions
+// ============================================================
+
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();                               
+    session_start();
 }
 
 function require_login(): void
@@ -13,6 +16,10 @@ function require_login(): void
     }
 }
 
-
-
-// check weather user logged in if not login safely
+function require_admin(): void
+{
+    if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
+        header("Location: /login.php?error=Access denied.");
+        exit();
+    }
+}
