@@ -102,9 +102,9 @@ $reports = $stmt->fetchAll();
           <div class="col-md-4 mb-4">
             <div class="card h-100">
 
-              <?php if (!empty($report['image_1'])): ?>
+              <?php if (!empty($report['image_path'])): ?>
                 <img 
-                  src="<?= htmlspecialchars($report['image_1']) ?>" 
+                  src="<?= htmlspecialchars($report['image_path']) ?>" 
                   class="card-img-top" 
                   style="height:220px; object-fit:cover;"
                   alt="Report image"
