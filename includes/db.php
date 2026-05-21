@@ -2,14 +2,20 @@
 declare(strict_types=1);
 
 // ============================================================
-// FindIt — Database Connection (PlanetScale)
-// DO NOT commit this file to GitHub — it is in .gitignore
+// FindIt — Database Connection
+// Works on both XAMPP (local) and Render (production)
+// DO NOT commit real passwords to GitHub
 // ============================================================
 
-$host     = "aws.connect.psdb.cloud";
-$dbname   = "findit_db";
-$username = "09e443smq3utpmr7m5mk";
-$password = "YOUR_PLANETSCALE_PASSWORD";
+$host     = getenv('DB_HOST')     ?: 'aws.connect.psdb.cloud';
+$dbname   = getenv('DB_NAME')     ?: 'findit_db';
+$username = getenv('DB_USERNAME') ?: '09e443smq3utpmr7m5mk';
+$password = getenv('DB_PASSWORD') ?: 'YOUR_PLANETSCALE_PASSWORD';
+
+// SSL cert path — Linux (Render) vs Windows (XAMPP)
+$sslCert = file_exists('/etc/ssl/certs/ca-certificates.crt')
+    ? '/etc/ssl/certs/ca-certificates.crt'
+    : 'C:/xampp/apache/conf/ssl.crt/cacert.pem';
 
 try {
     $pdo = new PDO(
@@ -20,7 +26,7 @@ try {
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES   => false,
-            PDO::MYSQL_ATTR_SSL_CA       => "C:/xampp/apache/conf/ssl.crt/cacert.pem",
+            PDO::MYSQL_ATTR_SSL_CA       => $sslCert,
             PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
         ]
     );

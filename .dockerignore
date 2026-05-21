@@ -1,0 +1,5 @@
+.git
+.gitignore
+README.md
+*.md
+test_email.php
