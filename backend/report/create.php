@@ -62,26 +62,22 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         }
 
     // Upload to Cloudinary
-        require_once __DIR__ . '/../../vendor/autoload.php';
-        \Cloudinary\Configuration\Configuration::instance([
-        'cloud' => [
-        'cloud_name' => getenv('CLOUDINARY_CLOUD_NAME'),
-        'api_key'    => getenv('CLOUDINARY_API_KEY'),
-        'api_secret' => getenv('CLOUDINARY_API_SECRET'),
-    ],
-    'url'   => ['secure' => true]
-    ]);
+    require_once __DIR__ . '/../../vendor/autoload.php';
 
-        $cloudinary = new \Cloudinary\Cloudinary();
-        $uploadApi  = $cloudinary->uploadApi();
+    $cloudinaryUrl = 'cloudinary://' . getenv('CLOUDINARY_API_KEY') . ':' . getenv('CLOUDINARY_API_SECRET') . '@' . getenv('CLOUDINARY_CLOUD_NAME');
+
+    $config = \Cloudinary\Configuration\Configuration::instance($cloudinaryUrl);
+
+    $cloudinary = new \Cloudinary\Cloudinary($config);
+    $uploadApi  = $cloudinary->uploadApi();
 
     try {
-    $result    = $uploadApi->upload($_FILES['image']['tmp_name'], ['folder' => 'findit']);
-    $imagePath = $result['secure_url'];
+        $result    = $uploadApi->upload($_FILES['image']['tmp_name'], ['folder' => 'findit']);
+        $imagePath = $result['secure_url'];
     } catch (\Exception $e) {
-    error_log('Cloudinary upload failed: ' . $e->getMessage());
-    header("Location: ../../report-create.php?error=Image upload failed. Please try again.");
-    exit();
+        error_log('Cloudinary upload failed: ' . $e->getMessage());
+        header("Location: ../../report-create.php?error=Image upload failed. Please try again.");
+        exit();
     }
 }
 
