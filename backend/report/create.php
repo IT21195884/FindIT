@@ -52,27 +52,36 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
 
     $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
 
-    if (!in_array($ext, $allowedExtensions, true)) {
-        header("Location: ../../report-create.php?error=Invalid image type. Only JPG, PNG, and GIF are allowed.");
-        exit();
-    }
-    if ($_FILES['image']['size'] > $maxSize) {
-        header("Location: ../../report-create.php?error=Image too large. Maximum size is 2MB.");
-        exit();
-    }
+        if (!in_array($ext, $allowedExtensions, true)) {
+    header("Location: ../../report-create.php?error=Invalid image type. Only JPG, PNG, and GIF are allowed.");
+    exit();
+        }
+        if ($_FILES['image']['size'] > $maxSize) {
+    header("Location: ../../report-create.php?error=Image too large. Maximum size is 2MB.");
+    exit();
+        }
 
-    // Create uploads directory if it doesn't exist
-    $uploadDir = __DIR__ . '/../../uploads/';
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
-    }
+    // Upload to Cloudinary
+        require_once __DIR__ . '/../../vendor/autoload.php';
+        \Cloudinary\Configuration\Configuration::instance([
+        'cloud' => [
+        'cloud_name' => getenv('CLOUDINARY_CLOUD_NAME'),
+        'api_key'    => getenv('CLOUDINARY_API_KEY'),
+        'api_secret' => getenv('CLOUDINARY_API_SECRET'),
+    ],
+    'url'   => ['secure' => true]
+    ]);
 
-    $filename = uniqid('report_', true) . '.' . $ext;
-    if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $filename)) {
-        $imagePath = 'uploads/' . $filename;
-    } else {
-        header("Location: ../../report-create.php?error=Image upload failed. Please try again.");
-        exit();
+        $cloudinary = new \Cloudinary\Cloudinary();
+        $uploadApi  = $cloudinary->uploadApi();
+
+    try {
+    $result    = $uploadApi->upload($_FILES['image']['tmp_name'], ['folder' => 'findit']);
+    $imagePath = $result['secure_url'];
+    } catch (\Exception $e) {
+    error_log('Cloudinary upload failed: ' . $e->getMessage());
+    header("Location: ../../report-create.php?error=Image upload failed. Please try again.");
+    exit();
     }
 }
 
