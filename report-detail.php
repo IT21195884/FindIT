@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/header.php';
+// ── Do ALL checks and redirects BEFORE including header.php ──
 require_once 'includes/db.php';
 require_once 'includes/functions.php';
 
@@ -22,13 +22,12 @@ $stmt = $pdo->prepare("
 $stmt->execute([$reportId]);
 $report = $stmt->fetch();
 
-// If report not found or not active redirect to homepage
 if (!$report) {
-    header("Location: /index.php?error=Report not found or no longer available.");
+    header("Location: /index.php");
     exit();
 }
 
-// Map category to page link for back button
+// Map category to back link
 $categoryLinks = [
     'Pets'            => '/pets.php',
     'Electronics'     => '/electronics.php',
@@ -37,6 +36,9 @@ $categoryLinks = [
 ];
 $backLink  = $categoryLinks[$report['category']] ?? '/index.php';
 $backLabel = $report['category'] . ' Reports';
+
+// ── Now safe to output HTML ──
+require_once 'includes/header.php';
 ?>
 
 <main class="py-5">
