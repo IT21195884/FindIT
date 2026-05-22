@@ -138,6 +138,11 @@ $reports = $stmt->fetchAll();
 
                 <p class="mb-1">
                   <strong>Date:</strong> <?= htmlspecialchars($report['report_date']) ?>
+                  <div class="mt-3">
+                  <a href="/report-detail.php?id=<?= $report['id'] ?>" class="btn btn-sm w-100" style="background-color:#EAF4F6; color:#0A7E8C; border:1px solid #0A7E8C;">
+                    View Details →
+                  </a>
+                  </div>
                 </p>
 
               </div>
