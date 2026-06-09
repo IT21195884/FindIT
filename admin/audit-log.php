@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
@@ -42,18 +42,23 @@ $totalRecords = (int)$countStmt->fetchColumn();
 $totalPages   = max(1, (int)ceil($totalRecords / $perPage));
 
 // Fetch log entries with admin name
-$params[] = $perPage;
-$params[] = $offset;
-
 $stmt = $pdo->prepare("
     SELECT al.*, u.name AS admin_name
     FROM admin_log al
     JOIN users u ON al.admin_id = u.id
     $where
     ORDER BY al.timestamp DESC
-    LIMIT ? OFFSET ?
+    LIMIT :limit OFFSET :offset
 ");
-$stmt->execute($params);
+
+// Bind filter params first
+$i = 1;
+foreach ($params as $val) {
+    $stmt->bindValue($i++, $val);
+}
+$stmt->bindValue(':limit',  $perPage, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset,  PDO::PARAM_INT);
+$stmt->execute();
 $logs = $stmt->fetchAll();
 
 // Action labels and colours for display
