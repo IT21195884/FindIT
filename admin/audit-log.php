@@ -1,5 +1,5 @@
 <?php
-
+require_once '../includes/header.php';
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] ?? '') !== 'admin') 
     exit();
 }
 
-require_once '../includes/header.php';
+
 
 // Pagination
 $perPage    = 20;
