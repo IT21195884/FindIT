@@ -25,6 +25,7 @@
                         <li class="nav-item"><a class="nav-link" href="/admin/dashboard.php">Admin Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/moderation.php">Moderation</a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/users.php">Users</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/audit-log.php">Audit Log</a></li>
                     <?php endif; ?>
                     <li class="nav-item"><a class="nav-link" href="/logout.php">Logout</a></li>
                 <?php else: ?>
