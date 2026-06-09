@@ -175,7 +175,9 @@ $recent = $pdo->query("
         <a href="reports.php?status=pending" class="btn btn-warning">
           View Pending Reports
         </a>
-
+        <a href="audit-log.php" class="btn btn-outline-primary">
+          📋 View Audit Log
+        </a>
         <a href="../index.php" class="btn btn-outline-secondary">
           Back to Website
         </a>
