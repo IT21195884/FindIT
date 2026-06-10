@@ -17,48 +17,45 @@ $conditions = ["status = 'active'"];
 $params     = [];
 
 if (!empty($keyword)) {
-    $conditions[] = "(title LIKE ? OR description LIKE ? OR suburb LIKE ?)";
-    $params[]     = "%$keyword%";
-    $params[]     = "%$keyword%";
-    $params[]     = "%$keyword%";
+    $conditions[] = "(title LIKE :kw1 OR description LIKE :kw2 OR suburb LIKE :kw3)";
+    $params[':kw1'] = "%$keyword%";
+    $params[':kw2'] = "%$keyword%";
+    $params[':kw3'] = "%$keyword%";
 }
 if (!empty($suburb)) {
-    $conditions[] = "suburb LIKE ?";
-    $params[]     = "%$suburb%";
+    $conditions[] = "suburb LIKE :suburb";
+    $params[':suburb'] = "%$suburb%";
 }
 if (!empty($date)) {
-    $conditions[] = "report_date = ?";
-    $params[]     = $date;
+    $conditions[] = "report_date = :date";
+    $params[':date'] = $date;
 }
 if (!empty($type) && in_array($type, ['lost', 'found'], true)) {
-    $conditions[] = "report_type = ?";
-    $params[]     = $type;
+    $conditions[] = "report_type = :type";
+    $params[':type'] = $type;
 }
 if (!empty($category) && in_array($category, ['Pets', 'Electronics', 'Documents', 'Missing Persons'], true)) {
-    $conditions[] = "category = ?";
-    $params[]     = $category;
+    $conditions[] = "category = :category";
+    $params[':category'] = $category;
 }
 
 $where = "WHERE " . implode(" AND ", $conditions);
 
-// Total count
+// Total count for pagination
 $countStmt = $pdo->prepare("SELECT COUNT(*) FROM reports $where");
 $countStmt->execute($params);
 $totalRecords = (int)$countStmt->fetchColumn();
 $totalPages   = max(1, (int)ceil($totalRecords / $perPage));
 
-// Fetch reports
+// Fetch reports with LIMIT
 $stmt = $pdo->prepare("
     SELECT * FROM reports
     $where
     ORDER BY is_urgent DESC, created_at DESC
     LIMIT :limit OFFSET :offset
 ");
-
-// Bind filter params
-$i = 1;
-foreach ($params as $val) {
-    $stmt->bindValue($i++, $val);
+foreach ($params as $key => $val) {
+    $stmt->bindValue($key, $val);
 }
 $stmt->bindValue(':limit',  $perPage, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset,  PDO::PARAM_INT);
