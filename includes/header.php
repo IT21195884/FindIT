@@ -18,9 +18,11 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="/index.php">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/browse.php">Browse Reports</a></li>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <li class="nav-item"><a class="nav-link" href="/dashboard.php">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="/report-create.php">Report Lost/Found</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/profile.php">My Profile</a></li>
                     <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
                         <li class="nav-item"><a class="nav-link" href="/admin/dashboard.php">Admin Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/moderation.php">Moderation</a></li>
@@ -30,7 +32,9 @@
                     <li class="nav-item"><a class="nav-link" href="/logout.php">Logout</a></li>
                 <?php else: ?>
                     <li class="nav-item"><a class="nav-link" href="/login.php">Login</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-warning text-dark px-3 ms-2" href="/register.php">Register</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-warning text-dark px-3 ms-2" href="/register.php">Register</a>
+                    </li>
                 <?php endif; ?>
             </ul>
         </div>
