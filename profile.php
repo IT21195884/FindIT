@@ -1,4 +1,5 @@
 <?php
+require_once 'includes/header.php';
 require_once 'includes/db.php';
 require_once 'includes/functions.php';
 
@@ -8,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require_once 'includes/header.php';
+
 
 $userId = (int)$_SESSION['user_id'];
 

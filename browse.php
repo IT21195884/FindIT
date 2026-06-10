@@ -48,17 +48,21 @@ $totalRecords = (int)$countStmt->fetchColumn();
 $totalPages   = max(1, (int)ceil($totalRecords / $perPage));
 
 // Fetch reports
-$fetchParams   = $params;
-$fetchParams[] = $perPage;
-$fetchParams[] = $offset;
-
 $stmt = $pdo->prepare("
     SELECT * FROM reports
     $where
     ORDER BY is_urgent DESC, created_at DESC
-    LIMIT ? OFFSET ?
+    LIMIT :limit OFFSET :offset
 ");
-$stmt->execute($fetchParams);
+
+// Bind filter params
+$i = 1;
+foreach ($params as $val) {
+    $stmt->bindValue($i++, $val);
+}
+$stmt->bindValue(':limit',  $perPage, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset,  PDO::PARAM_INT);
+$stmt->execute();
 $reports = $stmt->fetchAll();
 ?>
 
