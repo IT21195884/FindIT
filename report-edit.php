@@ -29,8 +29,8 @@ if (!$report) {
             <div class="mb-3">
               <label class="form-label fw-bold">Report Type</label>
               <select name="type" class="form-select" required>
-                <option value="lost" <?= $report['type'] === 'lost' ? 'selected' : '' ?>>Lost</option>
-                <option value="found" <?= $report['type'] === 'found' ? 'selected' : '' ?>>Found</option>
+                <option value="lost"  <?= $report['report_type'] === 'lost'  ? 'selected' : '' ?>>Lost</option>
+                <option value="found" <?= $report['report_type'] === 'found' ? 'selected' : '' ?>>Found</option>
               </select>
             </div>
             <div class="mb-3">
@@ -55,7 +55,7 @@ if (!$report) {
             </div>
             <div class="mb-4">
               <label class="form-label fw-bold">Date Lost/Found</label>
-              <input type="date" name="date_occurred" class="form-control" value="<?= $report['date_occurred'] ?>" required>
+              <input type="date" name="date_occurred" class="form-control" value="<?= $report['report_date'] ?>" required>
             </div>
             <button type="submit" class="btn btn-primary w-100 fw-bold">Save Changes</button>
             <a href="dashboard.php" class="btn btn-outline-secondary w-100 mt-2">Cancel</a>
