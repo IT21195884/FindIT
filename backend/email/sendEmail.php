@@ -21,7 +21,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 define('SMTP_HOST',     'mail.smtp2go.com');
 define('SMTP_PORT',     2525);
 define('SMTP_USERNAME', 'capstone2026');
-define('SMTP_PASSWORD', 'capstonescu2026');
+define('SMTP_PASSWORD', 'capstonescu2026-2023');
 define('MAIL_FROM',     'p.das.11@student.scu.edu.au');
 define('MAIL_NAME',     'FindIt Community Platform');
 // ─────────────────────────────────────────────────────────────
