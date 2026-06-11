@@ -24,13 +24,12 @@ $allowedActions = [
     'deactivate_user', 'ban_user', 'reactivate_user'
 ];
 
-// Build query
 $conditions = [];
 $params     = [];
 
 if ($filterAction && in_array($filterAction, $allowedActions, true)) {
-    $conditions[] = "al.action = ?";
-    $params[]     = $filterAction;
+    $conditions[] = "al.action = :action";
+    $params[':action'] = $filterAction;
 }
 
 $where = $conditions ? "WHERE " . implode(" AND ", $conditions) : "";
@@ -50,6 +49,12 @@ $stmt = $pdo->prepare("
     ORDER BY al.timestamp DESC
     LIMIT :limit OFFSET :offset
 ");
+foreach ($params as $key => $val) {
+    $stmt->bindValue($key, $val);
+}
+$stmt->bindValue(':limit',  $perPage, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset,  PDO::PARAM_INT);
+$stmt->execute();
 
 // Bind filter params first
 $i = 1;
