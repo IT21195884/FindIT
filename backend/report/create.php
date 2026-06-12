@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start();    //Starting the session
 require_once '../../includes/db.php';
 require_once '../../includes/functions.php';
 
@@ -16,6 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 }
+
+
+
 
 // Sanitize POST inputs
 $type        = sanitize($_POST['type'] ?? '');
