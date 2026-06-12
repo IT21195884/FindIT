@@ -8,6 +8,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+
+//Using POST method
 $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
 $type = sanitize($_POST['type'] ?? '');
 $category = sanitize($_POST['category'] ?? '');
@@ -27,7 +29,7 @@ if (!in_array($type, ['lost', 'found'], true)) {
     exit();
 }
 
-// VALIdating the report owner(Logged in user)
+
 $checkStmt = $pdo->prepare("SELECT id FROM reports WHERE id = ? AND user_id = ?");
 $checkStmt->execute([$id, $_SESSION['user_id']]);
 $report = $checkStmt->fetch();
@@ -46,7 +48,8 @@ $stmt = $pdo->prepare("
 ");
 
 
-//Running the query
+//Running the SQL query
+
 $stmt->execute([
     $type,
     $category,
