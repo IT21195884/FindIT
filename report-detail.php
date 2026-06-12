@@ -11,6 +11,9 @@ if (!$reportId) {
     exit();
 }
 
+
+
+
 // Fetch report with owner details
 $stmt = $pdo->prepare("
     SELECT r.*, u.name AS owner_name, u.email AS owner_email
